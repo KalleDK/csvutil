@@ -39,6 +39,8 @@ type Decoder struct {
 	// Map must be set before the first call to Decode and not changed after it.
 	Map func(field, col string, v interface{}) string
 
+	FnMap func(col string, f interface{}) DecodeFunc
+
 	r       Reader
 	typeKey typeKey
 	hmap    map[string]int
@@ -250,6 +252,15 @@ func (d *Decoder) fields(k typeKey) ([]decField, error) {
 		if err != nil {
 			return nil, err
 		}
+
+		if d.FnMap != nil {
+			if fc := d.FnMap(f.tag.name, reflect.Zero(f.typ).Interface()); fc != nil {
+				fn = func(s string, v reflect.Value) error {
+					return fc(s, v.Addr().Interface())
+				}
+			}
+		}
+		
 
 		df := decField{
 			columnIndex: i,

@@ -31,6 +31,8 @@ var (
 	decodeFloat64 = decodeFloatN(64)
 )
 
+type DecodeFunc func(s string, v interface{}) error
+
 type decodeFunc func(s string, v reflect.Value) error
 
 func decodeString(s string, v reflect.Value) error {
