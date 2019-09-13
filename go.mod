@@ -1,1 +1,1 @@
-module github.com/jszwec/csvutil
+module github.com/KalledK/csvutil
